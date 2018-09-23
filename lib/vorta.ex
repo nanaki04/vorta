@@ -76,7 +76,7 @@ defmodule Vorta do
   @typedoc """
   The id value to identify and access dynamic servers.
   """
-  @type id :: String.t | atom | number
+  @type id :: String.t() | atom | number
 
   @typedoc """
   The state to be maintained by a server.
@@ -88,9 +88,9 @@ defmodule Vorta do
   Used in middleware to determine what sort of mutation to the state is taking place.
   """
   @type mutation_type ::
-    :new
-    | :update
-    | :delete
+          :new
+          | :update
+          | :delete
 
   @typedoc """
   Update function to apply mutations to the state.
@@ -123,7 +123,8 @@ defmodule Vorta do
   Update the server state by passing the server id, and an updater function.
   The updater function expects the server current state as input, and expects a tuple with the updated state 
   """
-  @callback update(id, (state -> {:ok, state} | {:ok, {state, reply}} | {:error, term})) :: {:ok, reply} | {:error, term}
+  @callback update(id, (state -> {:ok, state} | {:ok, {state, reply}} | {:error, term})) ::
+              {:ok, reply} | {:error, term}
 
   @doc """
   Fetches the state from the server.
@@ -131,7 +132,7 @@ defmodule Vorta do
   @callback fetch(id) :: {:ok, state} | {:error, term}
 
   @doc false
-  @callback name(id) :: GenServer.name
+  @callback name(id) :: GenServer.name()
 
   @doc """
   Temporarily shuts down the server.
@@ -148,7 +149,7 @@ defmodule Vorta do
   Start the server.
   This will automatically be called when creating a new server using `Vorta.new/1`.
   """
-  @callback start_link(state) :: GenServer.on_start
+  @callback start_link(state) :: GenServer.on_start()
 
   @doc """
   Check if the server is currently up and running.
@@ -261,18 +262,18 @@ defmodule Vorta do
         unquote(Module.concat(env.module, Clone)).clone(state)
       end
 
-      @spec ensure_awake(Vorta.id) :: {:ok, Vorta.id} | {:error, term}
+      @spec ensure_awake(Vorta.id()) :: {:ok, Vorta.id()} | {:error, term}
       defp ensure_awake(id) do
         if up?(id) do
           {:ok, id}
-        else 
+        else
           unquote(Module.concat(env.module, Clone)).retrieve(id)
           |> Result.bind(fn state -> new(state) end)
           |> Result.map(fn _ -> id end)
         end
       end
 
-      @spec shutdown(Vorta.id) :: {:ok, Vorta.id} | {:error, term}
+      @spec shutdown(Vorta.id()) :: {:ok, Vorta.id()} | {:error, term}
       defp shutdown(id) do
         GenServer.whereis(name(id))
         |> Option.return()
@@ -294,13 +295,17 @@ defmodule Vorta do
       end
 
       @doc false
-      @spec call_new({Vorta.state, (nil -> {:ok, Vorta.state})}) :: {:ok, Vorta.state}
+      @spec call_new({Vorta.state(), (nil -> {:ok, Vorta.state()})}) :: {:ok, Vorta.state()}
       def call_new({:new, state, updater}) do
         updater.(state)
       end
 
       @doc false
-      @spec call_update({Vorta.state, (Vorta.state -> {:ok, Vorta.state} | {:ok, {Vorta.state, term}} | {:error, term})}) :: {:ok, {Vorta.state, term}} | {:error, term}
+      @spec call_update(
+              {Vorta.state(),
+               (Vorta.state() ->
+                  {:ok, Vorta.state()} | {:ok, {Vorta.state(), term}} | {:error, term})}
+            ) :: {:ok, {Vorta.state(), term}} | {:error, term}
       def call_update({:update, state, updater}) do
         case updater.(state) do
           {:ok, {{_, _} = state, reply}} -> {:ok, {state, reply}}
@@ -311,7 +316,7 @@ defmodule Vorta do
       end
 
       @doc false
-      @spec call_delete({Vorta.state, (Vorta.state -> {:ok, nil})}) :: {:ok, nil}
+      @spec call_delete({Vorta.state(), (Vorta.state() -> {:ok, nil})}) :: {:ok, nil}
       def call_delete({:delete, state, updater}) do
         updater.(state)
       end

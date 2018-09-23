@@ -5,22 +5,22 @@ defmodule Vorta.Clone do
   """
 
   @doc false
-  @callback name(Vorta.id) :: GenServer.name
+  @callback name(Vorta.id()) :: GenServer.name()
 
   @doc false
-  @callback stop(Vorta.id) :: {:ok, Vorta.id} | {:error, term}
+  @callback stop(Vorta.id()) :: {:ok, Vorta.id()} | {:error, term}
 
   @doc false
-  @callback clone(Vorta.state) :: {:ok, Vorta.state} | {:error, term}
+  @callback clone(Vorta.state()) :: {:ok, Vorta.state()} | {:error, term}
 
   @doc false
-  @callback retrieve(Vorta.id) :: {:ok, Vorta.state} | {:error, term}
+  @callback retrieve(Vorta.id()) :: {:ok, Vorta.state()} | {:error, term}
 
   @doc false
-  @callback start_link(Vorta.state) :: GenServer.on_start
+  @callback start_link(Vorta.state()) :: GenServer.on_start()
 
   @doc false
-  @callback up?(Vorta.id) :: boolean
+  @callback up?(Vorta.id()) :: boolean
 
   defmacro __using__(_opts) do
     quote do
@@ -63,7 +63,7 @@ defmodule Vorta.Clone do
         |> Option.to_bool()
       end
 
-      @spec ensure_alive(Vorta.id) :: {:ok, Vorta.id} | {:error, term}
+      @spec ensure_alive(Vorta.id()) :: {:ok, Vorta.id()} | {:error, term}
       defp ensure_alive(id) do
         if up?(id) do
           {:ok, id}
@@ -92,5 +92,4 @@ defmodule Vorta.Clone do
       def handle_call(:retrieve, _, state), do: {:reply, {:ok, state}, state}
     end
   end
-
 end
