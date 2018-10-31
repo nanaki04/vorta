@@ -48,7 +48,7 @@ defmodule Vorta.Clone do
       @impl Vorta.Clone
       def clone({id, state}) do
         ensure_alive(id)
-        |> Result.bind(fn id -> GenServer.call(name(id), {:clone, {id, state}}) end)
+        |> ResultEx.bind(fn id -> GenServer.call(name(id), {:clone, {id, state}}) end)
       end
 
       @impl Vorta.Clone

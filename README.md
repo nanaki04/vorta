@@ -14,7 +14,7 @@ and recovers it in case of a crash using supervisors.
     ...>
     ...> State.Player.new({1, %{name: "Jessie"}})
     {:ok, {1, %{name: "Jessie"}}}
-    iex> State.Player.update(1, fn {id, player} -> Result.return({{id, %{player | name: "Sol"}}, "Reply"}) end)
+    iex> State.Player.update(1, fn {id, player} -> ResultEx.return({{id, %{player | name: "Sol"}}, "Reply"}) end)
     {:ok, {:some, "Reply"}}
     iex> State.Player.fetch(1)
     {:ok, {1, %{name: "Sol"}}}

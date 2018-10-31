@@ -11,7 +11,7 @@ defmodule VortaTest do
           IO.inspect(state, label: IO.ANSI.blue() <> "current state" <> IO.ANSI.reset())
           result = next.({type, state, updater})
 
-          Result.map(result, fn
+          ResultEx.map(result, fn
             {{_, _} = state, reply} ->
               IO.inspect(state, label: IO.ANSI.cyan() <> "new state" <> IO.ANSI.reset())
               IO.inspect(reply, label: IO.ANSI.green() <> "reply" <> IO.ANSI.reset())
@@ -20,7 +20,7 @@ defmodule VortaTest do
               IO.inspect(state, label: IO.ANSI.cyan() <> "new state" <> IO.ANSI.reset())
           end)
 
-          Result.or_else_with(result, fn error ->
+          ResultEx.or_else_with(result, fn error ->
             IO.inspect(error, label: IO.ANSI.red() <> "error updating state" <> IO.ANSI.reset())
           end)
 
