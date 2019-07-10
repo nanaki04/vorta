@@ -1,4 +1,7 @@
 defmodule Vorta.Clone do
+  alias OptionEx, as: Option
+  alias ResultEx, as: Result
+
   @moduledoc """
   The `Vorta.Clone` is automatically started and used to backup state from `Vorta` servers.
   Since this process is handled automatically from the `Vorta` module, this module is not intended to be used directly.
@@ -48,7 +51,7 @@ defmodule Vorta.Clone do
       @impl Vorta.Clone
       def clone({id, state}) do
         ensure_alive(id)
-        |> ResultEx.bind(fn id -> GenServer.call(name(id), {:clone, {id, state}}) end)
+        |> Result.bind(fn id -> GenServer.call(name(id), {:clone, {id, state}}) end)
       end
 
       @impl Vorta.Clone

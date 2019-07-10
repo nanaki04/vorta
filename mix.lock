@@ -1,13 +1,14 @@
 %{
   "dialyxir": {:hex, :dialyxir, "0.5.1", "b331b091720fd93e878137add264bac4f644e1ddae07a70bf7062c7862c4b952", [:mix], [], "hexpm"},
   "earmark": {:hex, :earmark, "1.2.6", "b6da42b3831458d3ecc57314dff3051b080b9b2be88c2e5aa41cd642a5b044ed", [:mix], [], "hexpm"},
-  "entangle": {:git, "https://github.com/nanaki04/entangle_ex.git", "09708192671908dcca74cd7df27e200706da3e7f", []},
+  "entangle": {:git, "https://github.com/nanaki04/entangle_ex.git", "ab3b5a6c2e0553c542aeddefca665c3a4b266adc", []},
   "ex_doc": {:hex, :ex_doc, "0.19.1", "519bb9c19526ca51d326c060cb1778d4a9056b190086a8c6c115828eaccea6cf", [:mix], [{:earmark, "~> 1.1", [hex: :earmark, repo: "hexpm", optional: false]}, {:makeup_elixir, "~> 0.7", [hex: :makeup_elixir, repo: "hexpm", optional: false]}], "hexpm"},
   "layers": {:git, "https://github.com/nanaki04/layers_ex.git", "dcb58efaf187ad73e06a20d7dfd37aba8b7982d2", []},
   "makeup": {:hex, :makeup, "0.5.5", "9e08dfc45280c5684d771ad58159f718a7b5788596099bdfb0284597d368a882", [:mix], [{:nimble_parsec, "~> 0.4", [hex: :nimble_parsec, repo: "hexpm", optional: false]}], "hexpm"},
   "makeup_elixir": {:hex, :makeup_elixir, "0.10.0", "0f09c2ddf352887a956d84f8f7e702111122ca32fbbc84c2f0569b8b65cbf7fa", [:mix], [{:makeup, "~> 0.5.5", [hex: :makeup, repo: "hexpm", optional: false]}], "hexpm"},
   "nimble_parsec": {:hex, :nimble_parsec, "0.4.0", "ee261bb53214943679422be70f1658fff573c5d0b0a1ecd0f18738944f818efe", [:mix], [], "hexpm"},
   "option": {:git, "https://github.com/nanaki04/option_ex.git", "cb940022385419a790e1e6cd5dadf124ef89ef19", []},
+  "option_ex": {:hex, :option_ex, "0.1.0", "daf089240580a92c72a406c9eba761614a610603abe61c62e4415543fdef7ff2", [:mix], [], "hexpm"},
   "result": {:git, "https://github.com/nanaki04/result_ex.git", "5483e2a316e95278673f3c204edc86b979cc97d3", []},
-  "result_ex": {:hex, :result_ex, "0.1.0", "b4225d35201da78faaee6c7288cf7a1dd86eb32158c50ac2df20dd57ab94a96e", [:mix], [], "hexpm"},
+  "result_ex": {:hex, :result_ex, "0.1.0", "72bb09048f19fc40b639c5f5134a7764826bf834d3563cbb73f1aab76eea9f37", [:mix], [], "hexpm"},
 }

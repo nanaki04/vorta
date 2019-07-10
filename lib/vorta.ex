@@ -1,4 +1,7 @@
 defmodule Vorta do
+  alias OptionEx, as: Option
+  alias ResultEx, as: Result
+
   @moduledoc """
   Vorta is a library that wraps genservers in order to automatically clones their state,
   and recovers it in case of a crash using supervisors.
@@ -221,28 +224,28 @@ defmodule Vorta do
       def delete(id) do
         state =
           fetch(id)
-          |> ResultEx.or_else(nil)
+          |> Result.or_else(nil)
 
         entangled_delete({:delete, state, fn _ -> {:ok, nil} end})
-        |> ResultEx.bind(fn _ -> shutdown(id) end)
-        |> ResultEx.bind(&unquote(Module.concat(env.module, Clone)).stop/1)
+        |> Result.bind(fn _ -> shutdown(id) end)
+        |> Result.bind(&unquote(Module.concat(env.module, Clone)).stop/1)
       end
 
       @impl Vorta
       def fetch(id) do
         ensure_awake(id)
-        |> ResultEx.bind(fn id -> GenServer.call(name(id), :fetch) end)
+        |> Result.bind(fn id -> GenServer.call(name(id), :fetch) end)
       end
 
       @impl Vorta
       def sleep(id) do
         state =
           fetch(id)
-          |> ResultEx.or_else({id, nil})
+          |> Result.or_else({id, nil})
 
         unquote(Module.concat(env.module, Clone)).clone(state)
-        |> ResultEx.bind(fn _ -> shutdown(id) end)
-        |> ResultEx.map(fn _ -> state end)
+        |> Result.bind(fn _ -> shutdown(id) end)
+        |> Result.map(fn _ -> state end)
       end
 
       @impl Vorta
@@ -268,8 +271,8 @@ defmodule Vorta do
           {:ok, id}
         else
           unquote(Module.concat(env.module, Clone)).retrieve(id)
-          |> ResultEx.bind(fn state -> new(state) end)
-          |> ResultEx.map(fn _ -> id end)
+          |> Result.bind(fn state -> new(state) end)
+          |> Result.map(fn _ -> id end)
         end
       end
 
@@ -288,7 +291,7 @@ defmodule Vorta do
       @impl GenServer
       def init(state) do
         entangled_new({:new, nil, fn _ -> {:ok, state} end})
-        |> ResultEx.map(fn
+        |> Result.map(fn
           {{_, _} = state, _} -> state
           state -> state
         end)
@@ -324,11 +327,11 @@ defmodule Vorta do
       @impl GenServer
       def handle_call({:update, updater}, _, state) do
         entangled_update({:update, state, updater})
-        |> ResultEx.map(fn
+        |> Result.map(fn
           {{id, _} = state, reply} -> {:reply, {:ok, {:some, reply}}, state}
           {id, _} = state -> {:reply, {:ok, :none}, state}
         end)
-        |> ResultEx.or_else_with(fn error -> {:reply, {:error, error}, state} end)
+        |> Result.or_else_with(fn error -> {:reply, {:error, error}, state} end)
       end
 
       def handle_call(:fetch, _, state), do: {:reply, {:ok, state}, state}
